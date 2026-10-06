@@ -1,0 +1,1803 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SimulaENEM</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #182033;
+        }
+
+        /* =========================
+           CABEÇALHO
+        ========================= */
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #152b68,
+                #2758c7
+            );
+
+            color: white;
+
+            padding: 22px 7%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 10;
+
+            box-shadow: 0 5px 20px #0002;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: #65e6b4;
+        }
+
+        header small {
+            opacity: 0.85;
+        }
+
+        /* =========================
+           CONTEÚDO PRINCIPAL
+        ========================= */
+
+        main {
+            width: min(1150px, 92%);
+            margin: 35px auto 70px;
+        }
+
+        /* =========================
+           TELAS
+        ========================= */
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            background: white;
+
+            border-radius: 24px;
+
+            padding: 38px;
+
+            box-shadow: 0 10px 35px #1b356012;
+
+            margin-bottom: 28px;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+
+            font-size: clamp(
+                30px,
+                5vw,
+                48px
+            );
+        }
+
+        .hero p {
+            color: #61708d;
+
+            font-size: 17px;
+
+            max-width: 720px;
+
+            line-height: 1.6;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+
+            border-radius: 22px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 8px 28px #172b4510;
+
+            border: 1px solid #e6ebf4;
+        }
+
+        .card .icon {
+            width: 58px;
+            height: 58px;
+
+            border-radius: 17px;
+
+            display: grid;
+            place-items: center;
+
+            font-size: 28px;
+
+            background: #edf3ff;
+
+            margin-bottom: 18px;
+        }
+
+        .card h2 {
+            margin: 0 0 8px;
+        }
+
+        .card p {
+            color: #68758d;
+
+            line-height: 1.55;
+        }
+
+        /* =========================
+           TAGS
+        ========================= */
+
+        .stats {
+            display: flex;
+
+            gap: 9px;
+
+            flex-wrap: wrap;
+
+            margin: 18px 0;
+        }
+
+        .tag {
+            background: #f0f3f8;
+
+            color: #53617a;
+
+            padding: 7px 11px;
+
+            border-radius: 999px;
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           BOTÕES
+        ========================= */
+
+        button {
+            border: 0;
+
+            border-radius: 12px;
+
+            padding: 13px 18px;
+
+            background: #2758c7;
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+
+            filter: brightness(1.05);
+        }
+
+        button.secondary {
+            background: #e9eef8;
+
+            color: #254070;
+        }
+
+        button.green {
+            background: #18a978;
+        }
+
+        /* =========================
+           REDAÇÃO
+        ========================= */
+
+        .redacao {
+            margin-top: 22px;
+
+            border: 2px solid #d9f4eb;
+        }
+
+        .redacao .icon {
+            background: #e8faf4;
+        }
+
+        /* =========================
+           TOPO DO SIMULADO
+        ========================= */
+
+        .topbar {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           PROGRESSO
+        ========================= */
+
+        .progress {
+            height: 9px;
+
+            background: #e4e9f1;
+
+            border-radius: 99px;
+
+            overflow: hidden;
+
+            margin: 15px 0 28px;
+        }
+
+        .progress div {
+            height: 100%;
+
+            background: #2758c7;
+
+            width: 0;
+
+            transition: 0.25s;
+        }
+
+        /* =========================
+           QUESTÃO
+        ========================= */
+
+        .question {
+            background: white;
+
+            border-radius: 22px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 8px 28px #172b4510;
+        }
+
+        .question-number {
+            color: #2758c7;
+
+            font-weight: 800;
+        }
+
+        .question h2 {
+            line-height: 1.45;
+
+            font-size: 21px;
+        }
+
+        /* =========================
+           ALTERNATIVAS
+        ========================= */
+
+        .options {
+            display: grid;
+
+            gap: 12px;
+
+            margin-top: 22px;
+        }
+
+        .option {
+            background: #f7f9fc;
+
+            color: #25334e;
+
+            border: 2px solid #e4e9f1;
+
+            text-align: left;
+
+            padding: 16px;
+
+            border-radius: 13px;
+
+            font-weight: 500;
+        }
+
+        .option:hover {
+            border-color: #7f9ee2;
+
+            transform: none;
+        }
+
+        .option.selected {
+            border-color: #2758c7;
+
+            background: #edf3ff;
+        }
+
+        /* =========================
+           NAVEGAÇÃO
+        ========================= */
+
+        .nav {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 12px;
+
+            margin-top: 18px;
+        }
+
+        /* =========================
+           RESULTADO
+        ========================= */
+
+        .result {
+            text-align: center;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 8px 28px #172b4510;
+        }
+
+        .score {
+            font-size: 56px;
+
+            font-weight: 900;
+
+            color: #2758c7;
+        }
+
+        /* =========================
+           CRONÔMETRO
+        ========================= */
+
+        .timer {
+            background: #171f31;
+
+            color: white;
+
+            padding: 10px 15px;
+
+            border-radius: 12px;
+
+            font-weight: 800;
+
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer.warning {
+            background: #d94949;
+        }
+
+        /* =========================
+           TEMA DA REDAÇÃO
+        ========================= */
+
+        .theme {
+            background: #f5f8ff;
+
+            border-left: 5px solid #2758c7;
+
+            padding: 18px;
+
+            border-radius: 12px;
+
+            line-height: 1.6;
+        }
+
+        /* =========================
+           ÁREA DE TEXTO
+        ========================= */
+
+        textarea {
+            width: 100%;
+
+            min-height: 390px;
+
+            resize: vertical;
+
+            padding: 20px;
+
+            border: 2px solid #e1e7f0;
+
+            border-radius: 16px;
+
+            font:
+                17px/1.7 Georgia,
+                serif;
+
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #2758c7;
+        }
+
+        /* =========================
+           RODAPÉ
+        ========================= */
+
+        footer {
+            text-align: center;
+
+            color: #8390a5;
+
+            margin-top: 35px;
+        }
+
+        /* =========================
+           RESPONSIVO
+        ========================= */
+
+        @media (max-width: 750px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 18px 4%;
+            }
+
+            .hero,
+            .card,
+            .question {
+                padding: 23px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         CABEÇALHO
+    ========================= -->
+
+    <header>
+
+        <div class="logo">
+            Simula<span>ENEM</span>
+        </div>
+
+        <small>
+            Treine. Refaça. Evolua.
+        </small>
+
+    </header>
+
+
+    <main>
+
+        <!-- =========================
+             TELA INICIAL
+        ========================= -->
+
+        <section
+            id="home"
+            class="screen active"
+        >
+
+            <div class="hero">
+
+                <h1>
+                    Seu treino para o ENEM.
+                </h1>
+
+                <p>
+                    Resolva simulados completos,
+                    acompanhe seu desempenho e
+                    pratique redação com limite
+                    de 20 minutos.
+                </p>
+
+            </div>
+
+
+            <div class="cards">
+
+                <!-- LINGUAGENS -->
+
+                <article class="card">
+
+                    <div class="icon">
+                        📚
+                    </div>
+
+                    <h2>
+                        Linguagens e Humanas
+                    </h2>
+
+                    <p>
+                        Questões de Português,
+                        Literatura, História,
+                        Geografia e Sociologia.
+                    </p>
+
+                    <div class="stats">
+
+                        <span class="tag">
+                            90 questões
+                        </span>
+
+                        <span class="tag">
+                            Estilo ENEM
+                        </span>
+
+                        <span class="tag">
+                            Pode refazer
+                        </span>
+
+                    </div>
+
+                    <button
+                        onclick="startQuiz('linguagens')"
+                    >
+                        Começar simulado
+                    </button>
+
+                </article>
+
+
+                <!-- MATEMÁTICA -->
+
+                <article class="card">
+
+                    <div class="icon">
+                        🧮
+                    </div>
+
+                    <h2>
+                        Matemática e Natureza
+                    </h2>
+
+                    <p>
+                        Questões de Matemática,
+                        Física, Química e Biologia.
+                    </p>
+
+                    <div class="stats">
+
+                        <span class="tag">
+                            90 questões
+                        </span>
+
+                        <span class="tag">
+                            Estilo ENEM
+                        </span>
+
+                        <span class="tag">
+                            Pode refazer
+                        </span>
+
+                    </div>
+
+                    <button
+                        onclick="startQuiz('matematica')"
+                    >
+                        Começar simulado
+                    </button>
+
+                </article>
+
+            </div>
+
+
+            <!-- REDAÇÃO -->
+
+            <article class="card redacao">
+
+                <div class="icon">
+                    ✍️
+                </div>
+
+                <h2>
+                    Redação ENEM
+                </h2>
+
+                <p>
+                    Um dos quatro temas será
+                    sorteado. Ao iniciar,
+                    o cronômetro de 20 minutos
+                    começa automaticamente.
+                </p>
+
+                <div class="stats">
+
+                    <span class="tag">
+                        20 minutos
+                    </span>
+
+                    <span class="tag">
+                        4 temas
+                    </span>
+
+                    <span class="tag">
+                        Tema aleatório
+                    </span>
+
+                </div>
+
+                <button
+                    class="green"
+                    onclick="startRedacao()"
+                >
+                    Começar redação
+                </button>
+
+            </article>
+
+        </section>
+
+
+        <!-- =========================
+             TELA DO SIMULADO
+        ========================= -->
+
+        <section
+            id="quiz"
+            class="screen"
+        >
+
+            <div class="topbar">
+
+                <div>
+
+                    <button
+                        class="secondary"
+                        onclick="goHome()"
+                    >
+                        ← Início
+                    </button>
+
+                    <strong
+                        id="quizTitle"
+                        style="margin-left: 12px"
+                    ></strong>
+
+                </div>
+
+                <span id="questionCount"></span>
+
+            </div>
+
+
+            <div class="progress">
+
+                <div
+                    id="progressBar"
+                ></div>
+
+            </div>
+
+
+            <div class="question">
+
+                <div
+                    class="question-number"
+                    id="qNumber"
+                ></div>
+
+
+                <h2 id="qText"></h2>
+
+
+                <div
+                    class="options"
+                    id="options"
+                ></div>
+
+
+                <div class="nav">
+
+                    <button
+                        class="secondary"
+                        onclick="previousQuestion()"
+                    >
+                        Anterior
+                    </button>
+
+                    <button
+                        onclick="nextQuestion()"
+                        id="nextButton"
+                    >
+                        Próxima
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             RESULTADO DO SIMULADO
+        ========================= -->
+
+        <section
+            id="result"
+            class="screen"
+        >
+
+            <div class="result">
+
+                <h1>
+                    Simulado concluído!
+                </h1>
+
+                <div
+                    class="score"
+                    id="score"
+                ></div>
+
+                <p id="resultText"></p>
+
+                <button
+                    onclick="retryQuiz()"
+                >
+                    Refazer simulado
+                </button>
+
+                <button
+                    class="secondary"
+                    onclick="goHome()"
+                >
+                    Voltar ao início
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             TELA DA REDAÇÃO
+        ========================= -->
+
+        <section
+            id="redacao"
+            class="screen"
+        >
+
+            <div class="topbar">
+
+                <button
+                    class="secondary"
+                    onclick="goHome()"
+                >
+                    ← Sair
+                </button>
+
+
+                <div
+                    class="timer"
+                    id="timer"
+                >
+                    20:00
+                </div>
+
+            </div>
+
+
+            <div class="question">
+
+                <h1>
+                    Redação ENEM
+                </h1>
+
+                <p>
+                    Você tem
+                    <strong>
+                        20 minutos
+                    </strong>.
+                    O tema foi sorteado para
+                    esta tentativa.
+                </p>
+
+
+                <div class="theme">
+
+                    <strong>
+                        Tema:
+                    </strong>
+
+                    <div
+                        id="themeTitle"
+                        style="
+                            font-size: 20px;
+                            margin-top: 6px;
+                        "
+                    ></div>
+
+                    <p
+                        id="themeSupport"
+                    ></p>
+
+                </div>
+
+
+                <br>
+
+
+                <textarea
+                    id="essay"
+                    placeholder="Digite sua redação aqui..."
+                ></textarea>
+
+
+                <p>
+
+                    <strong>
+                        Palavras:
+                    </strong>
+
+                    <span
+                        id="wordCount"
+                    >
+                        0
+                    </span>
+
+                </p>
+
+
+                <button
+                    class="green"
+                    onclick="finishEssay()"
+                >
+                    Finalizar e enviar
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             RESULTADO DA REDAÇÃO
+        ========================= -->
+
+        <section
+            id="essayResult"
+            class="screen"
+        >
+
+            <div class="result">
+
+                <h1>
+                    Redação enviada! 📝
+                </h1>
+
+                <p>
+                    Sua redação está abaixo.
+                    Você pode copiá-la e
+                    enviá-la para correção.
+                </p>
+
+
+                <div
+                    class="theme"
+                    style="text-align: left"
+                >
+
+                    <strong>
+                        Tema:
+                    </strong>
+
+                    <span
+                        id="sentTheme"
+                    ></span>
+
+                </div>
+
+
+                <br>
+
+
+                <textarea
+                    id="sentEssay"
+                    readonly
+                    style="min-height: 300px"
+                ></textarea>
+
+
+                <br>
+                <br>
+
+
+                <button
+                    class="green"
+                    onclick="copyEssay()"
+                >
+                    Copiar redação
+                </button>
+
+
+                <button
+                    class="secondary"
+                    onclick="startRedacao()"
+                >
+                    Fazer outra redação
+                </button>
+
+
+                <button
+                    class="secondary"
+                    onclick="goHome()"
+                >
+                    Início
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            SimulaENEM • Plataforma de estudos
+        </footer>
+
+    </main>
+
+
+    <script>
+
+        /* ==========================================
+           TEMAS DE REDAÇÃO
+        ========================================== */
+
+        const temas = [
+
+            {
+                title:
+                    "Os desafios para combater a desinformação entre os jovens no Brasil",
+
+                support:
+                    "Discuta as causas, consequências e possíveis medidas para reduzir a circulação de informações falsas."
+            },
+
+            {
+                title:
+                    "A importância da educação financeira na formação dos jovens brasileiros",
+
+                support:
+                    "Reflita sobre o papel da escola, da família e das políticas públicas na formação financeira."
+            },
+
+            {
+                title:
+                    "Os impactos do uso excessivo das redes sociais na sociedade brasileira",
+
+                support:
+                    "Analise efeitos sociais e comportamentais e apresente uma proposta de intervenção."
+            },
+
+            {
+                title:
+                    "Desafios para ampliar o acesso à cultura no Brasil",
+
+                support:
+                    "Considere desigualdades regionais, acesso aos espaços culturais e políticas de incentivo."
+            }
+
+        ];
+
+
+        /* ==========================================
+           BANCO DE QUESTÕES
+        ========================================== */
+
+        const bancos = {
+
+            linguagens: [
+
+                {
+                    subject: "Português",
+
+                    text:
+                        "Em um texto argumentativo, a tese corresponde principalmente:",
+
+                    options: [
+                        "À opinião central defendida pelo autor.",
+                        "Ao título do texto.",
+                        "A uma informação sem relação com o tema.",
+                        "À assinatura do autor.",
+                        "A uma pergunta retórica."
+                    ],
+
+                    correct: 0
+                },
+
+
+                {
+                    subject: "Literatura",
+
+                    text:
+                        "Uma característica frequente do Modernismo brasileiro é:",
+
+                    options: [
+                        "A ruptura com modelos tradicionais.",
+                        "A rejeição da linguagem cotidiana.",
+                        "A imitação obrigatória dos clássicos.",
+                        "A ausência de crítica social.",
+                        "O uso exclusivo de formas fixas."
+                    ],
+
+                    correct: 0
+                },
+
+
+                {
+                    subject: "História",
+
+                    text:
+                        "A Constituição brasileira de 1988 ficou conhecida como Constituição Cidadã principalmente por:",
+
+                    options: [
+                        "Ampliar direitos sociais e democráticos.",
+                        "Extinguir as eleições.",
+                        "Criar o Estado Novo.",
+                        "Restabelecer a monarquia.",
+                        "Eliminar os direitos trabalhistas."
+                    ],
+
+                    correct: 0
+                },
+
+
+                {
+                    subject: "Geografia",
+
+                    text:
+                        "O processo de urbanização corresponde:",
+
+                    options: [
+                        "Ao crescimento e à expansão das áreas urbanas.",
+                        "À redução das cidades.",
+                        "À substituição de indústrias por agricultura.",
+                        "Ao fim das migrações.",
+                        "À diminuição da população urbana."
+                    ],
+
+                    correct: 0
+                },
+
+
+                {
+                    subject: "Sociologia",
+
+                    text:
+                        "Cidadania pode ser entendida como:",
+
+                    options: [
+                        "Participação social associada a direitos e deveres.",
+                        "Apenas o direito ao voto.",
+                        "Ausência de responsabilidades.",
+                        "Privilégio de determinados grupos.",
+                        "Somente o pagamento de impostos."
+                    ],
+
+                    correct: 0
+                }
+
+            ],
+
+
+            matematica: [
+
+                {
+                    subject: "Matemática",
+
+                    text:
+                        "Uma loja oferece 20% de desconto em um produto de R$ 150. O preço final é:",
+
+                    options: [
+                        "R$ 110",
+                        "R$ 120",
+                        "R$ 125",
+                        "R$ 130",
+                        "R$ 135"
+                    ],
+
+                    correct: 1
+                },
+
+
+                {
+                    subject: "Matemática",
+
+                    text:
+                        "Se 3x + 6 = 21, o valor de x é:",
+
+                    options: [
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7"
+                    ],
+
+                    correct: 2
+                },
+
+
+                {
+                    subject: "Biologia",
+
+                    text:
+                        "A fotossíntese é importante porque:",
+
+                    options: [
+                        "Produz matéria orgânica utilizando energia luminosa.",
+                        "Consome exclusivamente oxigênio.",
+                        "Impede a formação de glicose.",
+                        "Ocorre somente em animais.",
+                        "Não depende de luz."
+                    ],
+
+                    correct: 0
+                },
+
+
+                {
+                    subject: "Física",
+
+                    text:
+                        "A velocidade média é calculada pela relação entre:",
+
+                    options: [
+                        "Deslocamento e intervalo de tempo.",
+                        "Massa e volume.",
+                        "Força e área.",
+                        "Energia e massa.",
+                        "Temperatura e tempo."
+                    ],
+
+                    correct: 0
+                },
+
+
+                {
+                    subject: "Química",
+
+                    text:
+                        "Uma solução com pH menor que 7 é considerada:",
+
+                    options: [
+                        "Ácida.",
+                        "Básica.",
+                        "Neutra.",
+                        "Saturada.",
+                        "Metálica."
+                    ],
+
+                    correct: 0
+                }
+
+            ]
+
+        };
+
+
+        /* ==========================================
+           VARIÁVEIS
+        ========================================== */
+
+        let quizType = "";
+
+        let questions = [];
+
+        let current = 0;
+
+        let answers = [];
+
+        let selectedTheme = null;
+
+        let timerInterval = null;
+
+        let secondsLeft = 1200;
+
+
+        /* ==========================================
+           MOSTRAR UMA TELA
+        ========================================== */
+
+        function show(id) {
+
+            document
+                .querySelectorAll(".screen")
+                .forEach(screen => {
+
+                    screen.classList.remove("active");
+
+                });
+
+
+            document
+                .getElementById(id)
+                .classList.add("active");
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        /* ==========================================
+           VOLTAR PARA HOME
+        ========================================== */
+
+        function goHome() {
+
+            clearInterval(timerInterval);
+
+            show("home");
+
+        }
+
+
+        /* ==========================================
+           CRIAR 90 QUESTÕES
+        ========================================== */
+
+        function buildQuestions(type) {
+
+            const base = bancos[type];
+
+            const result = [];
+
+
+            /*
+                Atualmente temos algumas questões
+                demonstrativas.
+
+                O código abaixo cria 90 questões
+                para o funcionamento da plataforma.
+
+                Depois podemos substituir este banco
+                por 90 questões diferentes e autorais.
+            */
+
+            for (
+                let i = 0;
+                i < 90;
+                i++
+            ) {
+
+                const q =
+                    base[i % base.length];
+
+
+                result.push({
+
+                    subject: q.subject,
+
+                    text: q.text,
+
+                    options: [...q.options],
+
+                    correct: q.correct
+
+                });
+
+            }
+
+
+            /* Embaralha as questões */
+
+            return result.sort(
+                () => Math.random() - 0.5
+            );
+
+        }
+
+
+        /* ==========================================
+           INICIAR SIMULADO
+        ========================================== */
+
+        function startQuiz(type) {
+
+            quizType = type;
+
+
+            questions =
+                buildQuestions(type);
+
+
+            current = 0;
+
+
+            answers =
+                Array(questions.length)
+                    .fill(null);
+
+
+            document
+                .getElementById("quizTitle")
+                .textContent =
+                    type === "linguagens"
+                        ? "Linguagens e Humanas"
+                        : "Matemática e Natureza";
+
+
+            show("quiz");
+
+
+            renderQuestion();
+
+        }
+
+
+        /* ==========================================
+           MOSTRAR QUESTÃO
+        ========================================== */
+
+        function renderQuestion() {
+
+            const q =
+                questions[current];
+
+
+            document
+                .getElementById("qNumber")
+                .textContent =
+                    `Questão ${current + 1} de ${questions.length} • ${q.subject}`;
+
+
+            document
+                .getElementById("qText")
+                .textContent =
+                    q.text;
+
+
+            document
+                .getElementById("questionCount")
+                .textContent =
+                    `${current + 1}/90`;
+
+
+            document
+                .getElementById("progressBar")
+                .style.width =
+                    `${((current + 1) / 90) * 100}%`;
+
+
+            const options =
+                document.getElementById("options");
+
+
+            options.innerHTML = "";
+
+
+            q.options.forEach(
+                (option, index) => {
+
+                    const button =
+                        document.createElement("button");
+
+
+                    button.className =
+                        "option";
+
+
+                    if (
+                        answers[current] === index
+                    ) {
+
+                        button.classList.add(
+                            "selected"
+                        );
+
+                    }
+
+
+                    button.textContent =
+                        `${String.fromCharCode(65 + index)}) ${option}`;
+
+
+                    button.onclick = () => {
+
+                        answers[current] =
+                            index;
+
+
+                        renderQuestion();
+
+                    };
+
+
+                    options.appendChild(button);
+
+                }
+            );
+
+
+            document
+                .getElementById("nextButton")
+                .textContent =
+                    current === 89
+                        ? "Finalizar simulado"
+                        : "Próxima";
+
+        }
+
+
+        /* ==========================================
+           PRÓXIMA QUESTÃO
+        ========================================== */
+
+        function nextQuestion() {
+
+            if (current === 89) {
+
+                finishQuiz();
+
+                return;
+
+            }
+
+
+            current++;
+
+            renderQuestion();
+
+        }
+
+
+        /* ==========================================
+           QUESTÃO ANTERIOR
+        ========================================== */
+
+        function previousQuestion() {
+
+            if (current > 0) {
+
+                current--;
+
+                renderQuestion();
+
+            }
+
+        }
+
+
+        /* ==========================================
+           FINALIZAR SIMULADO
+        ========================================== */
+
+        function finishQuiz() {
+
+            const correct =
+                answers.reduce(
+                    (total, answer, index) => {
+
+                        return total +
+                            (
+                                answer ===
+                                questions[index].correct
+                                    ? 1
+                                    : 0
+                            );
+
+                    },
+                    0
+                );
+
+
+            document
+                .getElementById("score")
+                .textContent =
+                    `${correct}/90`;
+
+
+            document
+                .getElementById("resultText")
+                .textContent =
+                    `Você acertou ${correct} de 90 questões. Você pode refazer o simulado livremente.`;
+
+
+            show("result");
+
+        }
+
+
+        /* ==========================================
+           REFAZER SIMULADO
+        ========================================== */
+
+        function retryQuiz() {
+
+            startQuiz(quizType);
+
+        }
+
+
+        /* ==========================================
+           INICIAR REDAÇÃO
+        ========================================== */
+
+        function startRedacao() {
+
+            clearInterval(timerInterval);
+
+
+            /*
+                Sorteia um dos quatro temas.
+            */
+
+            selectedTheme =
+                temas[
+                    Math.floor(
+                        Math.random() *
+                        temas.length
+                    )
+                ];
+
+
+            document
+                .getElementById("themeTitle")
+                .textContent =
+                    selectedTheme.title;
+
+
+            document
+                .getElementById("themeSupport")
+                .textContent =
+                    selectedTheme.support;
+
+
+            document
+                .getElementById("essay")
+                .value = "";
+
+
+            updateWords();
+
+
+            /*
+                20 minutos
+                = 1200 segundos
+            */
+
+            secondsLeft = 1200;
+
+
+            updateTimer();
+
+
+            timerInterval =
+                setInterval(() => {
+
+                    secondsLeft--;
+
+
+                    updateTimer();
+
+
+                    /*
+                        Quando chegar a zero,
+                        a redação é enviada.
+                    */
+
+                    if (
+                        secondsLeft <= 0
+                    ) {
+
+                        clearInterval(
+                            timerInterval
+                        );
+
+
+                        finishEssay();
+
+                    }
+
+                }, 1000);
+
+
+            show("redacao");
+
+        }
+
+
+        /* ==========================================
+           ATUALIZAR CRONÔMETRO
+        ========================================== */
+
+        function updateTimer() {
+
+            const minutes =
+                String(
+                    Math.floor(
+                        secondsLeft / 60
+                    )
+                ).padStart(2, "0");
+
+
+            const seconds =
+                String(
+                    secondsLeft % 60
+                ).padStart(2, "0");
+
+
+            const timer =
+                document.getElementById(
+                    "timer"
+                );
+
+
+            timer.textContent =
+                `${minutes}:${seconds}`;
+
+
+            /*
+                Últimos 5 minutos
+                ficam vermelhos.
+            */
+
+            timer.classList.toggle(
+                "warning",
+                secondsLeft <= 300
+            );
+
+        }
+
+
+        /* ==========================================
+           CONTADOR DE PALAVRAS
+        ========================================== */
+
+        function updateWords() {
+
+            const text =
+                document
+                    .getElementById("essay")
+                    .value
+                    .trim();
+
+
+            const count =
+                text
+                    ? text.split(/\s+/).length
+                    : 0;
+
+
+            document
+                .getElementById("wordCount")
+                .textContent =
+                    count;
+
+        }
+
+
+        document
+            .getElementById("essay")
+            .addEventListener(
+                "input",
+                updateWords
+            );
+
+
+        /* ==========================================
+           FINALIZAR REDAÇÃO
+        ========================================== */
+
+        function finishEssay() {
+
+            clearInterval(
+                timerInterval
+            );
+
+
+            const text =
+                document
+                    .getElementById("essay")
+                    .value
+                    .trim();
+
+
+            document
+                .getElementById("sentTheme")
+                .textContent =
+                    selectedTheme.title;
+
+
+            document
+                .getElementById("sentEssay")
+                .value =
+                    text ||
+                    "[Nenhum texto foi escrito antes do tempo terminar.]";
+
+
+            show("essayResult");
+
+        }
+
+
+        /* ==========================================
+           COPIAR REDAÇÃO
+        ========================================== */
+
+        function copyEssay() {
+
+            navigator.clipboard.writeText(
+                document
+                    .getElementById("sentEssay")
+                    .value
+            );
+
+
+            alert(
+                "Redação copiada!"
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
+```
